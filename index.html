@@ -221,6 +221,7 @@
             height:100vh;
             background-color:#EED;
         }
+
         body a {
             color:#333;
         }
@@ -258,6 +259,7 @@
             transition-duration:.5s;
             margin:0px;
             padding:0px;
+            background-color:white;
         }
         #board select option {
             font-family: "Gloria Hallelujah";
@@ -277,6 +279,7 @@
             transition-duration:.5s;
             margin:0px;
             padding:0px;
+            background-color:white;
         }
         #board:hover input {
             transition-duration:.5s;
@@ -289,6 +292,22 @@
 
         .conclusion {
             font-size:130%;
+        }
+
+        /* Mobile */
+        @media screen and (max-width:700px) {
+            body {
+                display: block;
+                font-size:80%;
+            }
+            #board select {
+                transition-duration:.5s;
+                border-color:#CCC;
+            }
+            #board input {
+                transition-duration:.5s;
+                border-color:#CCC;
+            }
         }
 
     </style>
