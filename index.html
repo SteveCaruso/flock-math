@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poultry Math</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Gloria Hallelujah";
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="board">
+
+        <h1>Quail Math:</h1>
+
+        <p> 
+            <select id="quailtype">
+                <option value="1.5,330">A Standard Quail</option>
+                <option value="2,280">A Jumbo Quail</option>
+                <option value="other">Another Type</option>
+            </select>
+            eats<input id="feedamount" size="3" value="1.5"/>oz/day and lays<input id="eggsperyear" size="3" value="330"/>eggs/year.
+        </p>
+
+        <p>
+            A<input id="poundbag" size="2" value="50"/>lb bag of feed costs $<input id="bagcost" size="2" value="20"/>.<br/>
+            Which is $<span class="lbcost">{lbcost}</span>/lb, or $<span class="ozcost">{ozcost}</span>/oz.
+        </p>
+
+        <h2>
+            <select id="choice">
+                <option value="egg">How much is an egg?</option>
+                <option value="meal">How much is a meal?</option>
+            </select>
+        </h2>
+
+        <section id="eggmath">
+
+            <p>
+                A quail costs $<span class="ozcost">{ozcost}</span> x <span class="feedamount">{feedamount}</span> x 365 =  $<span class="feedperyear">{feedperyear}</span>/year to feed.
+            </p>
+
+            <p>
+                The ratio of males:females kept is<select id="ratio">
+                    <option value="0">none</option>
+                    <option value="1">1 to 1</option>
+                    <option value="2">1 to 2</option>
+                    <option value="3">1 to 3</option>
+                    <option value="4">1 to 4</option>
+                    <option value="5" selected>1 to 5</option>
+                    <option value="6">1 to 6</option>
+                    <option value="7">1 to 7</option>
+                    <option value="8">1 to 8</option>
+                    <option value="9">1 to 9</option>
+                    <option value="10">1 to 10</option>
+                </select><br/>
+                which increases the cost by $<span class="increase">{increase}</span> for each hen to $<span class="finalcost">{finalcost}</span>.
+            </p>
+
+            <p class="conclusion">
+                Each egg will cost about $<span class="eachegg">{eachegg}</span>.
+            </p>
+
+        </section>
+
+        <section id="meatmath">
+
+            <p>
+                At a meal<input id="guests" size="2" value="6"/>people will eat<input id="quaileaten" size="1" value=".5"/>quail each = <span class="totalquail">{totalquail}</span>.
+            </p>
+
+            <p>
+                The quail are harvested at<input id="harvest" size="1" value="6"/>weeks.
+            </p>
+
+            <p>
+                Each quail costs $<span class="ozcost">{ozcost}</span> x <span class="feedamount">{feedamount}</span> x <span class="harvest">{harvest}</span> x 7 =  $<span class="feedtoharvest">{feedtoharvest}</span>.
+            </p>
+
+            <p class="conclusion">
+                Total cost is $<span class="mealcost">{mealcost}</span> per meal.
+            </p>
+
+        </section>
+
+
+    </div>
+
+    <footer><a href="https://github.com/SteveCaruso/flock-math" target="_blank">View the code here.</a> Mouse over to interact.<br/>Inspired by Zack at Myshire Farm.</footer>
+
+    <script>
+
+        const s = (n) => document.querySelector(n);
+        const sa = (n) => document.querySelectorAll(n);
+        const round = (n,dec) => Math.round(n*dec*10)/(dec*10);
+
+        function updateMath() {
+            let feedamount = parseFloat(window.feedamount.value);
+            let eggsperyear = parseFloat(window.eggsperyear.value);
+            let poundbag = parseFloat(window.poundbag.value);
+            let bagcost = parseFloat(window.bagcost.value);
+
+            let lbcost = bagcost / poundbag;
+            s('.lbcost').innerHTML = lbcost.toFixed(3);
+
+            let ozcost = lbcost / 16;
+            sa('.ozcost').forEach((element) => {
+                element.innerHTML = ozcost.toFixed(3);
+            });
+
+            sa('.feedamount').forEach((element) => {
+                element.innerHTML = feedamount;
+            });
+
+            let feedperyear = ozcost * feedamount * 365;
+            s('.feedperyear').innerHTML = feedperyear.toFixed(2);
+
+            let ratio = parseInt(window.ratio.options[window.ratio.selectedIndex].value);
+
+            let increase = ratio == 0 ? 0 : feedperyear / ratio;
+            s('.increase').innerHTML = increase.toFixed(2);
+
+            let finalcost = feedperyear + increase;
+            s('.finalcost').innerHTML = finalcost.toFixed(2);
+
+            let eachegg = finalcost/eggsperyear;
+            s('.eachegg').innerHTML = eachegg.toFixed(3);
+
+            let totalquail = parseFloat(guests.value) * parseFloat(quaileaten.value);
+            s('.totalquail').innerHTML = totalquail;
+
+            let harvest = parseFloat(window.harvest.value);
+            s('.harvest').innerHTML = harvest;
+
+            let feedtoharvest = ozcost * feedamount * harvest * 7;
+            s('.feedtoharvest').innerHTML = feedtoharvest.toFixed(2);
+            
+            let mealcost = feedtoharvest * totalquail;
+            s('.mealcost').innerHTML = mealcost.toFixed(2);
+
+        }
+
+        feedamount.oninput = () => {
+            quailtype.selectedIndex = 2;
+            updateMath();
+        }
+
+        eggsperyear.oninput = () => {
+            quailtype.selectedIndex = 2;
+            updateMath();
+        }
+
+        quailtype.onchange = () => {
+            let selected = quailtype.options[quailtype.selectedIndex].value;
+            if (selected != "other") {
+                selected = selected.split(',');
+                feedamount.value = selected[0];
+                eggsperyear.value = selected[1];
+                updateMath();
+            }
+
+        };
+
+        poundbag.oninput = () => {
+            updateMath();
+        }
+
+        bagcost.oninput = () => {
+            updateMath();
+        }
+
+        ratio.oninput = () => {
+            updateMath();
+        }
+
+        guests.oninput = () => {
+            updateMath();
+        }
+
+        quaileaten.oninput = () => {
+            updateMath();
+        }
+
+        harvest.oninput = () => {
+            updateMath();
+        }
+
+        choice.onchange = () => {
+            let c = choice.options[choice.selectedIndex].value;
+            if (c == "egg") {
+                eggmath.style.display = "block";
+                meatmath.style.display = "none";
+            }
+            else {
+                eggmath.style.display = "none";
+                meatmath.style.display = "block";
+            }
+        }
+
+        //Start things off
+        updateMath();
+
+    </script>
+
+    <style>
+        body {
+            text-align:center;
+            display: flex;
+            flex-direction:column;
+            align-items: center;
+            justify-content: center;
+            height:100vh;
+        }
+        body a {
+            color:#333;
+        }
+        footer {
+            font-size:75%;
+        }
+        #board {
+            border:20px solid #222;
+            border-style:ridge;
+            border-radius:30px;
+            width:75%;
+            margin-left:auto;
+            margin-right:auto;
+            text-align:center;
+            padding-bottom:2em;
+            max-width:700px;
+            padding-left:1em;
+            padding-right:1em;
+        }
+        #board h1 {
+            text-align:center;
+            grid-column-start:0;
+            grid-column-end:2;
+        }
+
+        #board select {
+            font-family: "Gloria Hallelujah";
+            font-size:1em;
+            text-align:center;
+            border:1px solid white;
+            border-radius:100px;
+            transition-duration:.5s;
+            margin:0px;
+            padding:0px;
+        }
+        #board select option {
+            font-family: "Gloria Hallelujah";
+            font-size:1em;
+        }
+        #board:hover select {
+            transition-duration:.5s;
+            border-color:#CCC;
+        }
+
+        #board input {
+            font-family: "Gloria Hallelujah";
+            font-size:1em;
+            text-align:center;
+            border:1px solid white;
+            border-radius:100px;
+            transition-duration:.5s;
+            margin:0px;
+            padding:0px;
+        }
+        #board:hover input {
+            transition-duration:.5s;
+            border-color:#CCC;
+        }
+
+        #meatmath {
+            display:none;
+        }
+
+        .conclusion {
+            font-size:130%;
+        }
+
+    </style>
+
+</body>
+
+</html>
