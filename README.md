@@ -1,7 +1,9 @@
 # Flock Math
-A poultry calculator.
+This is a poultry calculator for various costs associated with raising chickens, quail, pigeons and other birds.
 
 ## Considerations
+
+This will eventually be the full list of considerations. Right now we're only working with quail cost per egg, and cost per meal.
 
 ### What to Calculate
 - Meat Price
